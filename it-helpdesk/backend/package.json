@@ -1,0 +1,41 @@
+{
+  "name": "it-helpdesk-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "sla:worker": "tsx scripts/slaWorker.ts",
+    "test": "node --import tsx --test --test-concurrency=1 tests/attachments.security.test.ts tests/notifications.integration.test.ts tests/sla.test.ts tests/sla.integration.test.ts tests/ticket-list.integration.test.ts",
+    "test:ticket-list": "node --import tsx --test tests/ticket-list.integration.test.ts",
+    "test:sla": "node --import tsx --test --test-concurrency=1 tests/sla.test.ts tests/sla.integration.test.ts",
+    "test:notifications": "node --import tsx --test tests/notifications.integration.test.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "engineer:create-test-account": "tsx scripts/createTestEngineer.ts",
+    "engineer:set-test-password": "tsx scripts/setTestEngineerPassword.ts",
+    "admin:promote": "tsx scripts/promoteAdmin.ts",
+    "attachments:cleanup": "tsx scripts/cleanupAttachmentFiles.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.4.0",
+    "yauzl": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
+    "@types/node": "^22.18.6",
+    "@types/yauzl": "^3.4.0",
+    "prisma": "^6.19.0",
+    "tsx": "^4.20.5",
+    "typescript": "~5.8.3"
+  }
+}

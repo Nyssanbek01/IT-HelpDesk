@@ -1,0 +1,27 @@
+{
+  "name": "it-helpdesk-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "node --import ../backend/node_modules/tsx/dist/loader.mjs --test tests/attachments.test.ts",
+    "test:browser": "node tests/attachments.browser.mjs && node tests/notifications.browser.mjs && node tests/sla.browser.mjs && node tests/ticket-list.browser.mjs",
+    "test:ticket-list:browser": "node tests/ticket-list.browser.mjs",
+    "test:sla:browser": "node tests/sla.browser.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.7"
+  }
+}

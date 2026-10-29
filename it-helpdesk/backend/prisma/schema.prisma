@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  tickets          Ticket[] @relation("TicketAuthor")
+  assignedTickets  Ticket[] @relation("TicketEngineer")
+  ticketComments   TicketComment[] @relation("CommentAuthor")
+  ticketHistory    TicketHistory[] @relation("HistoryActor")
+  uploadedAttachments TicketAttachment[] @relation("AttachmentUploader")
+  notifications Notification[] @relation("NotificationRecipient")
+  initiatedNotifications Notification[] @relation("NotificationActor")
+}
+
+model Ticket {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("new")
+  priority    String   @default("medium")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  assignedEngineerId Int?
+  responseDueAt DateTime?
+  resolutionDueAt DateTime?
+  firstRespondedAt DateTime?
+  resolvedAt DateTime?
+  slaTrackedFromCreation Boolean @default(true)
+  user        User     @relation("TicketAuthor", fields: [userId], references: [id])
+  assignedEngineer User? @relation("TicketEngineer", fields: [assignedEngineerId], references: [id], onDelete: SetNull)
+  comments    TicketComment[]
+  history     TicketHistory[]
+  attachments TicketAttachment[]
+  notifications Notification[]
+  slaEvents TicketSlaEvent[]
+
+  @@index([status, resolutionDueAt])
+  @@index([status, responseDueAt])
+  @@index([userId, createdAt, id])
+  @@index([createdAt, id])
+}
+
+model TicketSlaEvent {
+  id Int @id @default(autoincrement())
+  ticketId Int
+  stage String
+  phase String
+  createdAt DateTime @default(now())
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, stage, phase])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  recipientId Int
+  actorId     Int?
+  ticketId    Int?
+  type        String
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  readAt      DateTime?
+  recipient   User     @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor       User?    @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  ticket      Ticket?  @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  @@index([recipientId, isRead, createdAt, id])
+  @@index([createdAt])
+}
+
+model TicketComment {
+  id        Int      @id @default(autoincrement())
+  message   String
+  ticketId  Int
+  userId    Int
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation("CommentAuthor", fields: [userId], references: [id])
+}
+
+model TicketHistory {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int
+  actorId   Int
+  action    String
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actor     User     @relation("HistoryActor", fields: [actorId], references: [id])
+}
+
+model TicketAttachment {
+  id           Int      @id @default(autoincrement())
+  ticketId     Int
+  uploadedById Int
+  originalName String
+  storageKey   String   @unique
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
+  ticket       Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  uploadedBy   User     @relation("AttachmentUploader", fields: [uploadedById], references: [id])
+
+  @@index([ticketId])
+  @@index([createdAt])
+}
