@@ -74,7 +74,7 @@ function AuthenticatedLayout() {
   const isCreate = location.pathname === '/tickets/new'
   const engineerMine = location.search === '?scope=mine'
   const pageTitle = isAdminPage
-    ? location.pathname === '/admin' ? 'Admin Panel' : location.pathname === '/admin/users' ? 'Пользователи' : location.pathname.includes('/tickets/') ? 'Детали заявки' : 'Все заявки'
+    ? location.pathname === '/admin' ? 'Admin Panel' : location.pathname === '/admin/analytics' ? 'Аналитика' : location.pathname === '/admin/users' ? 'Пользователи' : location.pathname.includes('/tickets/') ? 'Детали заявки' : 'Все заявки'
     : isEngineerPage
     ? location.pathname.includes('/tickets/') ? 'Заявка' : engineerMine ? 'Мои заявки' : location.search === '?scope=all' ? 'Все заявки' : 'Панель инженера'
     : isDashboard ? 'Главная' : isCreate ? 'Создать заявку' : isTickets ? 'Мои заявки' : 'Заявка'
@@ -96,6 +96,7 @@ function AuthenticatedLayout() {
               <Link className={`sidebar-link${location.pathname.startsWith('/admin/tickets') ? ' sidebar-link--active' : ''}`} to="/admin/tickets" aria-current={location.pathname.startsWith('/admin/tickets') ? 'page' : undefined}>
                 <span className="nav-glyph nav-glyph--create" aria-hidden="true" /><span>Все заявки</span>
               </Link>
+              <Link className={`sidebar-link${location.pathname === '/admin/analytics' ? ' sidebar-link--active' : ''}`} to="/admin/analytics" aria-current={location.pathname === '/admin/analytics' ? 'page' : undefined}><span className="nav-glyph nav-glyph--tickets" aria-hidden="true" /><span>Аналитика</span></Link>
             </>
           ) : isEngineer ? (
             <>

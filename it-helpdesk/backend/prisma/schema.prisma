@@ -50,6 +50,7 @@ model Ticket {
   @@index([status, responseDueAt])
   @@index([userId, createdAt, id])
   @@index([createdAt, id])
+  @@index([resolvedAt, id])
 }
 
 model TicketSlaEvent {
@@ -102,6 +103,8 @@ model TicketHistory {
   createdAt DateTime @default(now())
   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   actor     User     @relation("HistoryActor", fields: [actorId], references: [id])
+
+  @@index([ticketId, action, newValue, createdAt])
 }
 
 model TicketAttachment {

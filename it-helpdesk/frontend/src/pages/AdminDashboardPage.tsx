@@ -62,6 +62,7 @@ function AdminDashboardPage() {
       <SlaAnalytics />
       {!isLoading && !error && (
         <section className="admin-quick-links">
+          <Link to="/admin/analytics">Отчёты и аналитика <span aria-hidden="true">→</span></Link>
           <Link to="/admin/tickets">Открыть все заявки <span aria-hidden="true">→</span></Link>
           <Link to="/admin/users">Управление пользователями <span aria-hidden="true">→</span></Link>
         </section>

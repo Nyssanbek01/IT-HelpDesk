@@ -1,4 +1,5 @@
 import { ticketList } from '../tickets/list.js'
+import analyticsRouter from './analytics.js'
 import { Prisma } from '@prisma/client'
 import { Router } from 'express'
 import { prisma } from '../db/prisma.js'
@@ -17,6 +18,7 @@ const adminTicketInclude = {
 } as const
 
 router.use(authenticateToken, requireRole('admin'))
+router.use('/analytics', analyticsRouter)
 
 router.get('/sla/stats', async (request, response) => {
   if (Object.keys(request.query).length) { response.status(400).json({ message: 'SLA stats does not accept query parameters' }); return }

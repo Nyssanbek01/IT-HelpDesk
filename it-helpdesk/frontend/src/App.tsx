@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import { AuthProvider, useAuth } from './auth/AuthContext'
 import AuthenticatedLayout from './components/AuthenticatedLayout'
 import DashboardPage from './pages/DashboardPage'
@@ -15,6 +16,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage'
 import AdminUsersPage from './pages/AdminUsersPage'
 import AdminTicketsPage from './pages/AdminTicketsPage'
 import AdminTicketDetailPage from './pages/AdminTicketDetailPage'
+const AdminAnalyticsPage = lazy(() => import('./pages/AdminAnalyticsPage'))
 
 function HomeRedirect() {
   const { token, user } = useAuth()
@@ -36,6 +38,7 @@ function App() {
           <Route path="/tickets/:id" element={<TicketDetailPage />} />
           <Route element={<RequireAdmin />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/analytics" element={<Suspense fallback={<div role="status">Загружаем аналитику…</div>}><AdminAnalyticsPage /></Suspense>} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
             <Route path="/admin/tickets" element={<AdminTicketsPage />} />
             <Route path="/admin/tickets/:id" element={<AdminTicketDetailPage />} />
